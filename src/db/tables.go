@@ -9,10 +9,10 @@ import (
 )
 
 func createDogTable(db *sql.DB) error {
-	query := tableQueryString("dog")
+	query := tableQueryString("dogs")
 	res, err := db.Exec(query)
 	if err != nil {
-		log.Printf("Error creating dog table: %s", err)
+		log.Printf("Error creating dogs table: %s", err)
 		return err
 	}
 	_, err = res.RowsAffected()
@@ -25,10 +25,10 @@ func createDogTable(db *sql.DB) error {
 }
 
 func createCatTable(db *sql.DB) error {
-	query := tableQueryString("cat")
+	query := tableQueryString("cats")
 	res, err := db.Exec(query)
 	if err != nil {
-		log.Printf("Error creating cat table: %s", err)
+		log.Printf("Error creating cats table: %s", err)
 		return err
 	}
 	_, err = res.RowsAffected()
@@ -40,7 +40,7 @@ func createCatTable(db *sql.DB) error {
 	return nil
 }
 
-func tableQueryString(tableName string) string{
+func tableQueryString(tableName string) string {
 	return fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(id int primary key auto_increment not null, name varchar(20), age int, color varchar(20), gender varchar(20), breed varchar(20), weight int)`, tableName)
 }
 
