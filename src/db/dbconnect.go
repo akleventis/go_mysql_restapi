@@ -36,7 +36,6 @@ func dbConnect() (*sql.DB, error) {
 	if err != nil {
 		log.Printf("Error while fetching rows: %s", err)
 	}
-	// log.Printf("Rows affected: %d\n", count)
 
 	db.Close()
 	db, err = sql.Open("mysql", sqlString(dbname))
