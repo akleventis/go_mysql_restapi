@@ -9,18 +9,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetCats(w http.ResponseWriter, r *http.Request) {
+func (app *App) GetCats(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var animals []Animal
-	// cannot input null values into struct => return empty string instead
-	res, err := Db.Query("SELECT id, name, COALESCE(age, '') as age, COALESCE(color, '') as color, COALESCE(gender, '') as gender, COALESCE(breed, '') as breed, COALESCE(weight, '') as weight FROM cats")
+
+	res, err := app.DB.Query("SELECT id, name, COALESCE(age, '') as age, COALESCE(color, '') as color, COALESCE(gender, '') as gender, COALESCE(breed, '') as breed, COALESCE(weight, '') as weight FROM cats")
+
 	if err != nil {
 		internalServiceError(w, err)
 		return
 	}
 	defer res.Close()
-
 	for res.Next() {
 		var animal Animal
 		// copy columns into struct, empty string if null value in DB (coalesce)
@@ -34,11 +34,11 @@ func GetCats(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(animals)
 }
 
-func GetCatById(w http.ResponseWriter, r *http.Request) {
+func (app *App) GetCatById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	res, err := Db.Query("SELECT id, name, COALESCE(age, '') as age, COALESCE(color, '') as color, COALESCE(gender, '') as gender, COALESCE(breed, '') as breed, COALESCE(weight, '') as weight FROM cats WHERE id=?", params["id"])
+	res, err := app.DB.Query("SELECT id, name, COALESCE(age, '') as age, COALESCE(color, '') as color, COALESCE(gender, '') as gender, COALESCE(breed, '') as breed, COALESCE(weight, '') as weight FROM cats WHERE id=?", params["id"])
 	if err != nil {
 		internalServiceError(w, err)
 		return
@@ -57,8 +57,8 @@ func GetCatById(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(animal)
 }
 
-func PostCat(w http.ResponseWriter, r *http.Request) {
-	statement, err := Db.Prepare("INSERT INTO cats(name, age, color, gender, breed, weight) VALUES(?,?,?,?,?,?)")
+func (app *App) PostCat(w http.ResponseWriter, r *http.Request) {
+	statement, err := app.DB.Prepare("INSERT INTO cats(name, age, color, gender, breed, weight) VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		internalServiceError(w, err)
 		return
@@ -87,7 +87,7 @@ func PostCat(w http.ResponseWriter, r *http.Request) {
 }
 
 // PATCH => not 'PUT'ting whole resource, only updating specified fields
-func UpdateCat(w http.ResponseWriter, r *http.Request) {
+func (app *App) UpdateCat(w http.ResponseWriter, r *http.Request) {
 	// grab url params ("id")
 	params := mux.Vars(r)
 
@@ -102,7 +102,7 @@ func UpdateCat(w http.ResponseWriter, r *http.Request) {
 	// build string from arbitrarily set params in request body (createUpdateString => helper func in utils.go)
 	setString := createUpdateString(petUpdate, "cats", params["id"])
 
-	statement, err := Db.Prepare(setString)
+	statement, err := app.DB.Prepare(setString)
 	if err != nil {
 		internalServiceError(w, err)
 		return
@@ -115,10 +115,10 @@ func UpdateCat(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Cat with ID %s was updated", params["id"])
 }
 
-func DeleteCat(w http.ResponseWriter, r *http.Request) {
+func (app *App) DeleteCat(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
-	statement, err := Db.Prepare("DELETE FROM cats WHERE id=?")
+	statement, err := app.DB.Prepare("DELETE FROM cats WHERE id=?")
 	if err != nil {
 		internalServiceError(w, err)
 		return

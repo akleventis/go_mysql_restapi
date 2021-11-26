@@ -20,7 +20,6 @@ func createDogTable(db *sql.DB) error {
 		log.Printf("Error getting rows affected: %s", err)
 		return err
 	}
-	// log.Printf("Rows affected (dog): %d", rows)
 	return nil
 }
 
@@ -36,7 +35,6 @@ func createCatTable(db *sql.DB) error {
 		log.Printf("Error getting rows affected: %s", err)
 		return err
 	}
-	// log.Printf("Rows affected (cat): %d", rows)
 	return nil
 }
 

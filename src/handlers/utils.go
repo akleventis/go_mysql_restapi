@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+type App struct {
+	DB *sql.DB
+}
+
 type Animal struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
@@ -16,8 +20,6 @@ type Animal struct {
 	Breed  string `json:"breed"`
 	Weight string `json:"weight"`
 }
-
-var Db *sql.DB
 
 func newNullString(s string) sql.NullString {
 	if len(s) == 0 {
