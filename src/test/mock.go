@@ -9,7 +9,7 @@ var Cat1Mock = &handlers.Animal{
 	Name:   "Cat1",
 	Age:    "1",
 	Color:  "White",
-	Gender: "female",
+	Gender: "Female",
 	Breed:  "Munchkin",
 	Weight: "8",
 }

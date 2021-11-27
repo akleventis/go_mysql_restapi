@@ -100,16 +100,22 @@ func (app *App) UpdateCat(w http.ResponseWriter, r *http.Request) {
 	petUpdate := make(map[string]string)
 	json.Unmarshal(body, &petUpdate)
 	// build string from arbitrarily set params in request body (createUpdateString => helper func in utils.go)
-	setString := createUpdateString(petUpdate, "cats", params["id"])
+	query := createUpdateString(petUpdate, "cats", params["id"])
 
-	statement, err := app.DB.Prepare(setString)
+	statement, err := app.DB.Prepare(query)
 	if err != nil {
 		internalServiceError(w, err)
 		return
 	}
-	_, err = statement.Exec()
+	result, err := statement.Exec()
 	if err != nil {
 		internalServiceError(w, err)
+		return
+	}
+	// Check if any rows were affected (wrong id)
+	affected, _ := result.RowsAffected()
+	if affected == 0 {
+		resourceNotFound(w)
 		return
 	}
 	fmt.Fprintf(w, "Cat with ID %s was updated", params["id"])
@@ -123,10 +129,16 @@ func (app *App) DeleteCat(w http.ResponseWriter, r *http.Request) {
 		internalServiceError(w, err)
 		return
 	}
-	_, err = statement.Exec(params["id"])
+	result, err := statement.Exec(params["id"])
 	if err != nil {
 		internalServiceError(w, err)
 		return
 	}
-	fmt.Fprintf(w, "Post with ID %s was deleted", params["id"])
+	// Check if any rows were affected (wrong id)
+	affected, _ := result.RowsAffected()
+	if affected == 0 {
+		resourceNotFound(w)
+		return
+	}
+	fmt.Fprintf(w, "Cat with ID %s was deleted", params["id"])
 }

@@ -30,7 +30,7 @@ func main() {
 	// router.HandleFunc("/dogs/{id}", handler.DeleteDog).Methods("DELETE")
 
 	router.HandleFunc("/cats", handler.GetCats).Methods("GET")
-	router.HandleFunc("/cat", handler.PostCat).Methods("POST")
+	router.HandleFunc("/cats", handler.PostCat).Methods("POST")
 	router.HandleFunc("/cats/{id}", handler.GetCatById).Methods("GET")
 	router.HandleFunc("/cats/{id}", handler.UpdateCat).Methods("PATCH")
 	router.HandleFunc("/cats/{id}", handler.DeleteCat).Methods("DELETE")

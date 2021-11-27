@@ -36,6 +36,11 @@ func internalServiceError(w http.ResponseWriter, err error) {
 	log.Printf("Error: %s", err)
 }
 
+func resourceNotFound(w http.ResponseWriter) {
+	http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	log.Printf("Error: Resource not found")
+}
+
 func createUpdateString(patchMap map[string]string, table string, id string) string {
 	setStr := fmt.Sprintf("UPDATE %s SET", table)
 	for k, v := range patchMap {
