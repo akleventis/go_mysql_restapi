@@ -23,11 +23,11 @@ func main() {
 
 	router := mux.NewRouter()
 
-	// router.HandleFunc("/dogs", handler.GetDogs).Methods("GET")
-	// router.HandleFunc("/dog", handler.PostDog).Methods("POST")
-	// router.HandleFunc("/dogs/{id}", handler.GetDogById).Methods("GET")
-	// router.HandleFunc("/dogs/{id}", handler.UpdateDog).Methods("PATCH")
-	// router.HandleFunc("/dogs/{id}", handler.DeleteDog).Methods("DELETE")
+	router.HandleFunc("/dogs", handler.GetDogs).Methods("GET")
+	router.HandleFunc("/dogs", handler.PostDog).Methods("POST")
+	router.HandleFunc("/dogs/{id}", handler.GetDogById).Methods("GET")
+	router.HandleFunc("/dogs/{id}", handler.UpdateDog).Methods("PATCH")
+	router.HandleFunc("/dogs/{id}", handler.DeleteDog).Methods("DELETE")
 
 	router.HandleFunc("/cats", handler.GetCats).Methods("GET")
 	router.HandleFunc("/cats", handler.PostCat).Methods("POST")
